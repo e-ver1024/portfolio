@@ -377,8 +377,8 @@ nav .cta:hover { opacity: 0.8; }
   will-change: transform;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  /* 展开 1.4s（JS 会按方向覆盖时长与缓动）；opacity 供收起时淡出 */
-  transition: transform 1.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease, opacity 0.5s ease;
+  /* 展开 1.4s（JS 会按方向覆盖时长与缓动） */
+  transition: transform 1.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease;
 }
 .card .idx { font-size: 10px; letter-spacing: 0.25em; opacity: 0.85; }
 .card h3 {
@@ -1223,7 +1223,7 @@ const CONFIG = {
 /* 扇形卡片参数（对照参考实现，可微调） */
 const FAN = {
   rotateStep: 10,         // 展开时每档旋转角度（deg）
-  txStep: 80,             // 每档水平位移（px）
+  txStep: innerWidth < 640 ? 56 : 80,  // 每档水平位移（px）：5 卡时窄屏收紧防止出界
   tyStep: 16,             // 边缘卡片下沉量（px/档）
   easeExpand: 'cubic-bezier(0.22, 1, 0.36, 1)',    // 展开缓动（easeOut，起步即动）
   easeCollapse: 'cubic-bezier(0.22, 1, 0.36, 1)',  // 收起缓动：与展开同款 easeOut，消除起步迟滞
@@ -1260,6 +1260,13 @@ const PROJECTS = [
     stack: ['Banner 设计', '摄影', '字体排印'],
     grad: ['#d8a9a9', '#b98888'],
     img: 'assets/banner-phone-photography-course.jpg',
+  },
+  {
+    name: '服装电商 Banner · B 版',
+    role: '同一主题的灰绿冷调方案，与 A 版组成双版式 A/B 对比。',
+    stack: ['电商视觉', '版式设计', '冷调方案'],
+    grad: ['#9db8b4', '#6f8f8b'],
+    img: 'assets/banner-dress-bohemian-b.jpg',
   },
   {
     name: '服装电商 Banner',
@@ -1336,13 +1343,11 @@ function updateFan(expanded) {
       card.style.transitionTimingFunction = FAN.easeExpand;
       card.style.transitionDelay = (dist * FAN.staggerExpand).toFixed(3) + 's';
       card.style.transform = fanTransform(i - centerIdx);
-      card.style.opacity = '1';   // 展开时淡入
     } else {
       card.style.transitionDuration = FAN.durCollapse + 's';
       card.style.transitionTimingFunction = FAN.easeCollapse;
       card.style.transitionDelay = ((centerIdx - dist) * FAN.staggerCollapse).toFixed(3) + 's';
-      card.style.transform = pileTransform(i);
-      card.style.opacity = '0';   // 收起时边缩小边淡出，"收走"
+      card.style.transform = pileTransform(i);   // 收回成可见的堆叠（缩小 0.92 + 微错位），不淡出
     }
     card.style.zIndex = 10 + i;
   });
@@ -1424,11 +1429,10 @@ function closeZoom() {
   zoomState = null;
 }
 
-/* 初始：散落堆叠 + 隐藏（先禁过渡摆好位置，再交还过渡；滚到后自动展开淡入） */
+/* 初始：散落堆叠（先禁过渡摆好位置，再交还过渡；滚到后自动展开成扇形） */
 cards.forEach((card, i) => {
   card.style.transition = 'none';
   card.style.transform = pileTransform(i);
-  card.style.opacity = '0';
   card.style.zIndex = 10 + i;
 });
 requestAnimationFrame(() => requestAnimationFrame(() => {
