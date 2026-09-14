@@ -1383,8 +1383,8 @@ function openZoom(card, offset) {
   const natRatio = (cardImg.naturalWidth && cardImg.naturalHeight)
     ? cardImg.naturalWidth / cardImg.naturalHeight : 0.72;   // 兜底比例
 
-  const W = Math.min(innerWidth * 0.84, 480);
-  let maxImgH = Math.min(innerHeight * 0.56, 470);
+  const W = Math.min(innerWidth * 0.84, 720);              // 面板宽上限 720（原 480 的 1.5 倍）
+  let maxImgH = Math.min(innerHeight * 0.84, 705);         // 图高上限 705（原 470 的 1.5 倍），超视口由下方钳制兜底
 
   const panel = document.createElement('div');
   panel.className = 'zoom-panel';
