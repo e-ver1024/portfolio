@@ -1348,10 +1348,10 @@ function updateFan(expanded) {
       card.style.transitionTimingFunction = FAN.easeExpand;
       card.style.transitionDelay = (dist * FAN.staggerExpand).toFixed(3) + 's';
       card.style.transform = fanTransform(i - centerIdx);
-      // 展开瞬间闪现作品图：卡片到位后图片亮 ~0.9s 再隐去（减动效用户跳过）
+      // 展开瞬间闪现作品图：卡片到位后图片亮 ~0.5s 再隐去（减动效用户跳过）
       if (!prefersReduced) {
         card._flashT1 = setTimeout(() => card.classList.add('img-flash'), 450 + dist * 120);
-        card._flashT2 = setTimeout(() => card.classList.remove('img-flash'), 450 + dist * 120 + 900);
+        card._flashT2 = setTimeout(() => card.classList.remove('img-flash'), 450 + dist * 120 + 500);
       }
     } else {
       card.style.transitionDuration = FAN.durCollapse + 's';
