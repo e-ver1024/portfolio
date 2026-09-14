@@ -437,7 +437,11 @@ nav .cta:hover { opacity: 0.8; }
 .card:hover::after { opacity: 1; }
 
 /* 展开瞬间闪现作品图：JS 展开时给卡片临时加 .img-flash，图片浮现一拍后隐去 */
-.card.img-flash .card-img { opacity: 1; transform: scale(1); }
+.card.img-flash .card-img {
+  opacity: 1;
+  transform: scale(1);
+  transition-duration: 0.35s;   /* 闪现期快速淡入，0.5s 停留内能亮到最亮 */
+}
 
 .fan-hint {
   /* 固定钉在区块底部（绝对定位不占文档流），卡片展开/收起都不会挤压它 */
