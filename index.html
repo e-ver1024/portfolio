@@ -436,6 +436,9 @@ nav .cta:hover { opacity: 0.8; }
 .card:hover .card-img { opacity: 1; transform: scale(1); }
 .card:hover::after { opacity: 1; }
 
+/* 展开瞬间闪现作品图：JS 展开时给卡片临时加 .img-flash，图片浮现一拍后隐去 */
+.card.img-flash .card-img { opacity: 1; transform: scale(1); }
+
 .fan-hint {
   /* 固定钉在区块底部（绝对定位不占文档流），卡片展开/收起都不会挤压它 */
   position: absolute;
@@ -1338,16 +1341,24 @@ function updateFan(expanded) {
   const centerIdx = (cards.length - 1) / 2;
   cards.forEach((card, i) => {
     const dist = Math.abs(i - centerIdx);
+    // 清掉上一轮未执行的闪现定时器，避免快速连续展开/收起时闪烁错乱
+    clearTimeout(card._flashT1); clearTimeout(card._flashT2);
     if (expanded) {
       card.style.transitionDuration = FAN.durExpand + 's';
       card.style.transitionTimingFunction = FAN.easeExpand;
       card.style.transitionDelay = (dist * FAN.staggerExpand).toFixed(3) + 's';
       card.style.transform = fanTransform(i - centerIdx);
+      // 展开瞬间闪现作品图：卡片到位后图片亮 ~0.9s 再隐去（减动效用户跳过）
+      if (!prefersReduced) {
+        card._flashT1 = setTimeout(() => card.classList.add('img-flash'), 450 + dist * 120);
+        card._flashT2 = setTimeout(() => card.classList.remove('img-flash'), 450 + dist * 120 + 900);
+      }
     } else {
       card.style.transitionDuration = FAN.durCollapse + 's';
       card.style.transitionTimingFunction = FAN.easeCollapse;
       card.style.transitionDelay = ((centerIdx - dist) * FAN.staggerCollapse).toFixed(3) + 's';
       card.style.transform = pileTransform(i);   // 收回成可见的堆叠（缩小 0.92 + 微错位），不淡出
+      card.classList.remove('img-flash');        // 收起时确保图片隐去、取消待执行的闪现
     }
     card.style.zIndex = 10 + i;
   });
