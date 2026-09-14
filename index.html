@@ -681,10 +681,15 @@ nav .cta:hover { opacity: 0.8; }
 .work:hover .thumb img { transform: scale(1.04); }
 .work .thumb { cursor: zoom-in; }
 
-/* 作品集占位卡（.work--todo）：新作品待补，虚线框 + 居中加号，不触发灯箱 */
+/* 作品集占位卡（.work--todo）：淡紫预告卡，虚线框 + 白底紫加号，不触发灯箱 */
 .work--todo {
-  border: 1.5px dashed rgba(43,43,46,0.16);
-  background: transparent;
+  border: 1px dashed rgba(168, 164, 216, 0.35);
+  background: linear-gradient(180deg, #EEEDFE, var(--bg));
+  transition: transform var(--dur-quick) var(--ease-natural), box-shadow 0.4s ease;
+}
+.work.work--todo:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 40px -18px rgba(83, 74, 183, 0.25);
 }
 .work--todo .thumb {
   height: 170px;
@@ -694,17 +699,17 @@ nav .cta:hover { opacity: 0.8; }
   justify-content: center;
   gap: 12px;
   cursor: default;
-  background:
-    repeating-linear-gradient(-45deg, rgba(43,43,46,0.025) 0 10px, transparent 10px 20px),
-    var(--bg-soft);
+  background: #f7f7fc;
 }
 .work--todo .plus {
-  width: 44px;
-  height: 44px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  border: 1.5px solid rgba(43,43,46,0.22);
+  background: #fff;
+  border: 1.5px solid var(--accent);
   position: relative;
-  transition: transform var(--dur-mid) var(--ease-natural), border-color 0.3s ease;
+  box-shadow: 0 0 0 6px rgba(168, 164, 216, 0.18);   /* 外圈淡紫细环 */
+  transition: transform var(--dur-mid) var(--ease-natural), box-shadow 0.3s ease;
 }
 .work--todo .plus::before,
 .work--todo .plus::after {
@@ -712,25 +717,26 @@ nav .cta:hover { opacity: 0.8; }
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 16px;
+  width: 14px;
   height: 1.5px;
-  background: rgba(43,43,46,0.32);
+  background: var(--accent);
   transform: translate(-50%, -50%);
 }
 .work--todo .plus::after { transform: translate(-50%, -50%) rotate(90deg); }
 .work--todo:hover .plus {
   transform: rotate(90deg) scale(1.08);
-  border-color: var(--accent);
+  box-shadow: 0 0 0 8px rgba(168, 164, 216, 0.28);
 }
 .work--todo .badge {
   font-size: 11px;
   letter-spacing: 0.14em;
-  color: var(--ink-soft);
-  border: 1px solid rgba(43,43,46,0.14);
+  color: #7F77DD;
+  border: 1px solid rgba(175, 169, 236, 0.6);
   border-radius: 999px;
   padding: 3px 12px;
+  background: rgba(255, 255, 255, 0.6);
 }
-.work--todo .info h4 { color: var(--ink-soft); }
+.work--todo .info h4 { color: var(--ink); }
 
 /* ============================================================
    灯箱放大（点击作品图打开；opacity + scale 缓动，无弹跳）
