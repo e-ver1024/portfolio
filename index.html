@@ -337,8 +337,7 @@ nav .cta:hover { opacity: 0.8; }
   /* 顶部收窄 + 底部加厚（给底部绝对定位的提示文字留空间）→ 内容整体上移 */
   padding: 24px 20px 96px;
   overflow: hidden;
-  /* 放大时整块背景模糊（600ms filter 过渡，比卡片放大 700ms 略短，
-     缩回时背景先恢复清晰，clone 移除时无残留） */
+  /* 放大时整块背景模糊（面板缩回为无动画直接移除，模糊在移除后自然恢复） */
   transition: filter 0.6s cubic-bezier(0.32, 0.72, 0, 1);
 }
 .fan-section.zooming { filter: blur(14px); }
@@ -976,7 +975,6 @@ footer .copy { font-size: 11px; letter-spacing: 0.15em; color: #a9aaa8; }
         <div class="chips">
           <i class="l2">HTML / CSS</i>
           <i class="l3">JavaScript</i>
-          <i class="l3">GitHub Pages 部署</i>
         </div>
       </div>
       <div class="skg reveal">
@@ -1417,27 +1415,13 @@ function openZoom(card, offset) {
   setTimeout(() => { zoomJustOpened = false; }, 760);
 }
 
-/* 缩回：与放大同一条过渡，起点终点互换；背景模糊提前恢复 */
+/* 缩回：无动画，直接移除面板；背景模糊在移除后自然恢复 */
 function closeZoom() {
   if (!zoomState) return;
-  const { panel, startT } = zoomState;
-  panel.style.transition = '';
-  panel.style.transform = startT;
-  panel.style.borderRadius = '12px';
+  const { panel } = zoomState;
   fanSection.classList.remove('zooming');
-
-  let done = false;
-  const finish = () => {
-    if (done) return;
-    done = true;
-    requestAnimationFrame(() => { panel.remove(); zoomState = null; });
-  };
-  panel.addEventListener('transitionend', function h(e) {
-    if (e.propertyName !== 'transform') return;
-    panel.removeEventListener('transitionend', h);
-    finish();
-  });
-  setTimeout(finish, 860);
+  panel.remove();
+  zoomState = null;
 }
 
 /* 初始：散落堆叠 + 隐藏（先禁过渡摆好位置，再交还过渡；滚到后自动展开淡入） */
