@@ -1,4 +1,4 @@
-# 林植生 · Portfolio
+# Portfolio
 
 UI 设计方向个人作品集网站。单文件开发（HTML / CSS / JavaScript，无框架、无构建），部署在 GitHub Pages。
 
